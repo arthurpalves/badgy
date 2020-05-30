@@ -25,14 +25,13 @@ final class Long: Command {
     @Param var icon: String
     
     @Key("-a", "--angle", description: "Rotation angle of the badge")
-    var angle: Int?
+    var angle: String?
+    var angleInt: Int = 0
     
     @Key("-p", "--position",
          description: "Position on which to place the badge",
          validation: [Validation.allowing(Position.top.rawValue, Position.left.rawValue,
                                          Position.bottom.rawValue, Position.right.rawValue,
-                                         Position.topLeft.rawValue, Position.topRight.rawValue,
-                                         Position.bottomLeft.rawValue, Position.bottomRight.rawValue,
                                          Position.center.rawValue)]
     )
     var position: String?
@@ -42,22 +41,25 @@ final class Long: Command {
     
     public func execute() throws {
         logger.logSection("$ ", item: "badgy label \"\(labelText)\" \"\(icon)\"", color: .ios)
-        if let angle = angle {
+        if
+            let stringAngle = angle,
+            let angle = Int(String(stringAngle.replacingOccurrences(of: "\\", with: ""))) {
             switch angle {
             case -180...180:
+                angleInt = angle
                 logger.logDebug(item: "Acceptable angle")
             default:
                 throw CLI.Error(message: "Angle should be within range -180 ... 180")
             }
         }
         
-        process()
+        try process()
     }
     
-    private func process() {
+    private func process() throws {
         let folder = Path("Badgy")
         
-        try factory.makeBadge(with: labelText, angle: angle, inFolder: folder, completion: { (result) in
+        try factory.makeBadge(with: labelText, angle: angleInt, inFolder: folder, completion: { (result) in
             switch result {
             case .success(_):
                 try self.factory.appendBadge(to: self.icon,

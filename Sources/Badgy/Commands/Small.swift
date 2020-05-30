@@ -37,10 +37,10 @@ final class Small: Command {
     
     public func execute() throws {
         logger.logSection("$ ", item: "badgy small \"\(char)\" \"\(icon)\"", color: .ios)
-        process()
+        try process()
     }
     
-    private func process() {
+    private func process() throws {
         let folder = Path("Badgy")
         factory.makeSmall(with: char, inFolder: folder, completion: { (result) in
             switch result {
