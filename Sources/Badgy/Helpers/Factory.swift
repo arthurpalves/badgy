@@ -17,7 +17,7 @@ struct Factory {
                    colorHexCode: String? = nil,
                    angle: Int? = nil,
                    inFolder folder: Path,
-                   completion: @escaping BadgeProductionResponse) {
+                   completion: @escaping BadgeProductionResponse) throws {
         
         let color = colorHexCode ?? colors.randomElement()!
         
@@ -71,7 +71,9 @@ struct Factory {
     }
     
     func appendBadge(to baseIcon: String, folder: Path, label: String,
-                     position: Position, completion: @escaping BadgeProductionResponse) {
+                     position: Position?, completion: @escaping BadgeProductionResponse) throws {
+        let position = position ?? .bottom
+        
         do {
             let folderBase = folder.absolute().description
             let finalFilename = "\(folderBase)/\(label).png"
@@ -106,29 +108,5 @@ struct Factory {
         } catch {
             throw CLI.Error(message: "Failed to clean up temporary files")
         }
-    }
-}
-
-extension String {
-    // Add ability to converst a hexa string to UIcolor
-    var hexColor: NSColor {
-        let hex = trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int = UInt32()
-        Scanner(string: hex).scanHexInt32(&int)
-        let alpha, red, green, blue: UInt32
-        switch hex.count {
-        case 3: // RGB (12-bit)
-            (alpha, red, green, blue) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (alpha, red, green, blue) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (alpha, red, green, blue) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            return .clear
-        }
-        return NSColor(red: CGFloat(red) / 255,
-                       green: CGFloat(green) / 255,
-                       blue: CGFloat(blue) / 255,
-                       alpha: CGFloat(alpha) / 255)
     }
 }
