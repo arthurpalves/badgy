@@ -1,10 +1,9 @@
 [![License](https://img.shields.io/github/license/arthurpalves/badgy)](https://github.com/arthurpalves/badgy/blob/master/LICENSE)
-[![Version](https://img.shields.io/github/v/release/arthurpalves/badgy)](https://github.com/arthurpalves/badgy/releases)
 [![Language](https://img.shields.io/badge/language-swift-orange.svg?style=flat)](https://developer.apple.com/swift)
 ![Platform](https://img.shields.io/badge/platform-osx-lightgrey)
 
 <p align="center">
-<img src="Assets/badgy.svg" title="Badgy">
+<img src="Assets/badgy.png" title="Badgy">
 </p>
 
 <p align="center">Badgy is a command line tool that creates variants of your icon by adding badge overlays.</p>
