@@ -8,7 +8,7 @@ import Foundation
 import PathKit
 import SwiftCLI
 
-final class Small: Command {
+final class Small: DependencyManager, Command {
     // --------------
     // MARK: Command information
     
@@ -36,6 +36,11 @@ final class Small: Command {
     let factory = Factory()
     
     public func execute() throws {
+        guard areDependenciesInstalled()
+        else {
+            throw CLI.Error(message: "Missing dependencies. Run: 'brew install imagemagick'")
+        }
+        
         logger.logSection("$ ", item: "badgy small \"\(char)\" \"\(icon)\"", color: .ios)
         try process()
     }

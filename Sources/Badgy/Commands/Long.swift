@@ -8,7 +8,7 @@ import Foundation
 import PathKit
 import SwiftCLI
 
-final class Long: Command {
+final class Long: DependencyManager, Command {
     // --------------
     // MARK: Command information
     
@@ -40,6 +40,11 @@ final class Long: Command {
     let factory = Factory()
     
     public func execute() throws {
+        guard areDependenciesInstalled()
+        else {
+            throw CLI.Error(message: "Missing dependencies. Run: 'brew install imagemagick'")
+        }
+        
         logger.logSection("$ ", item: "badgy label \"\(labelText)\" \"\(icon)\"", color: .ios)
         if
             let stringAngle = angle,
