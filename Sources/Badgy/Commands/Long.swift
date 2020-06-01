@@ -8,7 +8,7 @@ import Foundation
 import PathKit
 import SwiftCLI
 
-final class Long: DependencyManager, Command {
+final class Long: DependencyManager, Command, IconSetDelegate {
     // --------------
     // MARK: Command information
     
@@ -29,11 +29,10 @@ final class Long: DependencyManager, Command {
         let path = Path(input)
         let formats = [".png", ".jpg", ".jpeg", ".appiconset"]
         
-        guard path.exists, formats.contains(path.lastComponent)
+        guard path.exists, formats.contains(where: { path.lastComponent.contains($0) })
         else {
             Logger.shared.logError("❌ ",
-                                   item: "Input file doesn't exist or doesn't have a valid format",
-                                   color: .red)
+                                   item: "Input file doesn't exist or doesn't have a valid format")
             return false
         }
         return true
@@ -55,6 +54,8 @@ final class Long: DependencyManager, Command {
     let logger = Logger.shared
     let factory = Factory()
     
+    var iconSetImages: IconSetImages?
+    
     public func execute() throws {
         guard areDependenciesInstalled()
         else {
@@ -74,16 +75,33 @@ final class Long: DependencyManager, Command {
             }
         }
         
-        try process()
+        var baseIcon = icon
+        if isIconSet(Path(icon)) {
+            logger.logDebug("", item: "Finding the largest image in the .appiconset", color: .purple)
+            
+            iconSetImages = iconSetImages(for: Path(icon))
+            
+            guard
+                let largest = iconSetImages?.largest,
+                largest.size.width > 0
+            else {
+                logger.logError("❌ ", item: "Couldn't find the largest image in the set")
+                exit(1)
+            }
+            baseIcon = largest.image.absolute().description
+            logger.logDebug("Found: ", item: baseIcon, color: .purple)
+        }
+        
+        try process(baseIcon: baseIcon)
     }
     
-    private func process() throws {
+    private func process(baseIcon: String) throws {
         let folder = Path("Badgy")
         
         try factory.makeBadge(with: labelText, angle: angleInt, inFolder: folder, completion: { (result) in
             switch result {
             case .success(_):
-                try self.factory.appendBadge(to: self.icon,
+                try self.factory.appendBadge(to: baseIcon,
                                          folder: folder,
                                          label: self.labelText,
                                          position: Position(rawValue: self.position ?? "bottom")) {
@@ -93,13 +111,17 @@ final class Long: DependencyManager, Command {
                         let filePath = Path(filename)
                         guard filePath.exists
                         else {
-                            self.logger.logError("Error: ", item: "Failed to create badge")
+                            self.logger.logError("❌ ", item: "Failed to create badge")
                             return
                         }
-                        self.logger.logInfo(item: "New Icon with badge '\(self.labelText)' created at '\(filePath.absolute().description)'")
+                        self.logger.logInfo(item: "Icon with badge '\(self.labelText)' created at '\(filePath.absolute().description)'")
                         try self.factory.cleanUp(folder: folder)
                         
-                        self.resize(filePath: filePath)
+                        if ReplaceFlag.value, let iconSet = self.iconSetImages {
+                            self.replace(iconSet: iconSet, with: filePath)
+                        } else {
+                            self.resize(filePath: filePath)
+                        }
                     case .failure(let error):
                         try self.factory.cleanUp(folder: folder)
                         throw CLI.Error(message: error.localizedDescription)
@@ -114,6 +136,10 @@ final class Long: DependencyManager, Command {
     
     private func resize(filePath: Path) {
         factory.resize(filename: filePath)
+    }
+    
+    private func replace(iconSet: IconSetImages, with newBadgeFile: Path) {
+        factory.replace(iconSet, with: newBadgeFile)
     }
 }
 
