@@ -22,7 +22,23 @@ final class Long: DependencyManager, Command {
     })
     var labelText: String
     
-    @Param var icon: String
+    @Param(validation: Validation<String>
+        .custom("Specify valid icon with format .png | .jpg | .appiconset") {
+        (input) in
+            
+        let path = Path(input)
+        let formats = [".png", ".jpg", ".jpeg", ".appiconset"]
+        
+        guard path.exists, formats.contains(path.lastComponent)
+        else {
+            Logger.shared.logError("❌ ",
+                                   item: "Input file doesn't exist or doesn't have a valid format",
+                                   color: .red)
+            return false
+        }
+        return true
+    })
+    var icon: String
     
     @Key("-a", "--angle", description: "Rotation angle of the badge")
     var angle: String?

@@ -21,7 +21,24 @@ final class Small: DependencyManager, Command {
      (input) in return input.count == 1
     })
     var char: String
-    @Param var icon: String
+    
+    @Param(validation: Validation<String>
+        .custom("Specify valid icon with format .png | .jpg | .appiconset") {
+        (input) in
+            
+        let path = Path(input)
+        let formats = [".png", ".jpg", ".jpeg", ".appiconset"]
+        
+        guard path.exists, formats.contains(path.lastComponent)
+        else {
+            Logger.shared.logError("❌ ",
+                                   item: "Input file doesn't exist or doesn't have a valid format",
+                                   color: .red)
+            return false
+        }
+        return true
+    })
+    var icon: String
     
     @Key("-p", "--position",
          description: "Position on which to place the badge",
