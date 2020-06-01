@@ -14,6 +14,7 @@
 - ✅ Position it on `top, left, bottom, right, topLeft, topRight, bottomLeft, bottomRight, center`
 - ✅ Supports rotation (long badge only)
 - ✅ Converts your icon to different sizes already
+- ✅ 🚀 Ability to automatically replace your `.appiconasset`, mainting the same name and sizes
 
 ## Disclaimer
 
@@ -77,6 +78,8 @@ Add small square label to app icon
 Options:
   -h, --help                Show help information
   -p, --position <value>    Position on which to place the badge
+  -r, --replace             Indicates Badgy should replace the input icon
+                            Only works if input is of format .appiconasset
   -v, --verbose             Log tech details for nerds
 ```
 
@@ -101,6 +104,8 @@ Options:
   -a, --angle <value>       Rotation angle of the badge
   -h, --help                Show help information
   -p, --position <value>    Position on which to place the badge
+  -r, --replace             Indicates Badgy should replace the input icon
+                            Only works if input is of format .appiconasset
   -v, --verbose             Log tech details for nerds
 ```
 
