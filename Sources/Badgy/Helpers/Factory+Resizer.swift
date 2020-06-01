@@ -4,8 +4,18 @@
 //  Created by Arthur Alves on 30/05/2020.
 //
 
+import Foundation
 import SwiftCLI
 import PathKit
+
+struct ImageSize: Codable {
+    let width: Int
+    let height: Int
+    
+    func description() -> String {
+        return "\(width)x\(height)"
+    }
+}
 
 extension Factory {
     func resize(filename: Path) {
@@ -21,8 +31,25 @@ extension Factory {
                     "\(bareFilename)_\($0).png"
                 )
             } catch {
-                Logger.shared.logError("Error: ", item: "Failed to resize icon to \(size)", color: .red)
+                Logger.shared.logError("❌ ", item: "Failed to resize icon to \(size)", color: .red)
             }
+        }
+    }
+    
+    func replace(_ iconSet: IconSetImages, with newBadgeFile: Path) {
+        iconSet.remaining
+            .forEach { (info) in
+                Logger.shared.logInfo("Replacing: ", item: info.image, color: .purple)
+                do {
+                    try Task.run(
+                        "convert", newBadgeFile.absolute().description,
+                        "-resize", info.size.description(),
+                        info.image.absolute().description
+                    )
+                } catch {
+                    Logger.shared.logError("❌ ",
+                                           item: "Failed to replace \(info.image)")
+                }
         }
     }
 }
