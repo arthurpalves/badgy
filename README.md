@@ -80,10 +80,13 @@ Options:
   -v, --verbose             Log tech details for nerds
 ```
 
-Example
+#### Example
 ```sh
-badgy small B ~/MyIcon.png --position topRight
+badgy small A ~/MyIcon.png --position topRight
 ```
+<p align="center">
+<img src="Assets/a_small_sample.png" title="badgy small">
+</p>
 
 ### Long badge
 
@@ -101,10 +104,14 @@ Options:
   -v, --verbose             Log tech details for nerds
 ```
 
-Example
+#### Example
 ```sh
-badgy long BETA ~/MyIcon.png --angle 15 --position topLeft
+badgy long BETA ~/MyIcon.png --angle 15 --position bottom
 ```
+<p align="center">
+<img src="Assets/beta_long_sample.png" title="badgy long">
+</p>
+
 
 ## License
 
