@@ -126,6 +126,20 @@ badgy long BETA ~/MyIcon.png --angle 15 --position bottom
 <img src="Assets/beta_long_sample.png" title="badgy long">
 </p>
 
+### Replace your icon directly
+
+The acceptable formats for your input icon are: `.png`, `.jpg` and `.appiconasset`.
+If the later is used, Badgy will find the largest image available in the asset to serve as input.
+
+#### `--replace`
+
+Replace is a flag that you can use alongside your `.appiconasset` input, it will iterate over all images available in the asset and convert the largest icon to the respective size, this allows Badgy to maintain the same amount of files, same names and same sizes.
+
+✅ Perfect for any icon set -> iOS, iPadOS, tvOS, macOS
+
+```sh
+badgy long TEST MyProjectSource/Assets.xcassets/AppIcon.appiconasset --angle 15 --position bottom --replace
+```
 
 ## License
 
