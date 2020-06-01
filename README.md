@@ -51,6 +51,15 @@ git clone https://github.com/arthurpalves/badgy.git
 cd badgy
 make install
 ```
+### Swift Package Manager
+
+#### Use as CLI
+
+```sh
+git clone https://github.com/arthurpalves/badgy.git
+cd badgy
+swift run badgy
+```
 
 ## Usage
 
