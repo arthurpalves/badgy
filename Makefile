@@ -12,16 +12,16 @@ SOURCES = $(wildcard $(srcdir)/**/*.swift)
 .DEFAULT_GOAL = all
 
 .PHONY: all
-all: badgy
+all: badgy_build
 
-badgy: $(SOURCES)
+badgy_build: $(SOURCES)
 	@swift build \
 		-c release \
 		--disable-sandbox \
 		--build-path "$(BUILDDIR)"
 
 .PHONY: install
-install: badgy
+install: badgy_build
 	@install -d "$(bindir)" "$(libdir)"
 	@install "$(BUILDDIR)/release/badgy" "$(bindir)"
 
