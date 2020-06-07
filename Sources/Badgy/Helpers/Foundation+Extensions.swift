@@ -1,8 +1,7 @@
 //
-//  File.swift
-//  
+//  Badgy
 //
-//  Created by yahor mikhnevich on 6/7/20.
+//  Created by Arthur Alves on 30/05/2020.
 //
 
 import Foundation
