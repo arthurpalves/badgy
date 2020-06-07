@@ -11,10 +11,12 @@ import PathKit
 extension Factory {
     func makeSmall(with label: String,
                     colorHexCode: String? = nil,
+                    tintColorHexCode: String? = nil,
                     inFolder folder: Path,
                     completion: @escaping BadgeProductionResponse) {
         
         let color = colorHexCode ?? colors.randomElement()!
+        let tintColor = tintColorHexCode ?? "white"
         
         do {
             let folderBase = folder.absolute().description
@@ -39,7 +41,7 @@ extension Factory {
                 "-gravity", "Center",
                 "-weight","700",
                 "-pointsize", "180",
-                "-fill", "white",
+                "-fill", "\(tintColor)",
                 "caption:\(label)",
                 "\(folderBase)/bottom.png"
             )
