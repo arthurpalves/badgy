@@ -48,6 +48,19 @@ final class Small: DependencyManager, Command, IconSetDelegate {
                                          Position.center.rawValue)]
     )
     var position: String?
+    
+    @Key("-c", "--color",
+         description: "Specify badge color with a hexadecimal color code",
+         validation: [Validation.hexColorCode()]
+    )
+    var color: String?
+    
+    @Key("-t", "--tint-color",
+         description: "Specify badge text/tint color with a hexadecimal color code",
+         validation: [Validation.hexColorCode()]
+    )
+    var tintColor: String?
+    
     let logger = Logger.shared
     let factory = Factory()
     
@@ -82,7 +95,7 @@ final class Small: DependencyManager, Command, IconSetDelegate {
     
     private func process(baseIcon: String) throws {
         let folder = Path("Badgy")
-        factory.makeSmall(with: char, inFolder: folder, completion: { (result) in
+        factory.makeSmall(with: char, colorHexCode: color, tintColorHexCode: tintColor, inFolder: folder, completion: { (result) in
             switch result {
             case .success(_):
                 try self.factory.appendBadge(to: baseIcon,

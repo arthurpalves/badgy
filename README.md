@@ -85,16 +85,17 @@ Usage: badgy small <char> <icon> [options]
 Add small square label to app icon
 
 Options:
-  -h, --help                Show help information
-  -p, --position <value>    Position on which to place the badge
-  -r, --replace             Indicates Badgy should replace the input icon
-                            Only works if input is of format .appiconasset
-  -v, --verbose             Log tech details for nerds
+  -c, --color <value>         Specify badge color with a hexadecimal color code
+  -h, --help                  Show help information
+  -p, --position <value>      Position on which to place the badge
+  -r, --replace               Indicates Badgy should replace the input icon
+  -t, --tint-color <value>    Specify badge text/tint color with a hexadecimal color code
+  -v, --verbose               Log tech details for nerds
 ```
 
 #### Example
 ```sh
-badgy small A ~/MyIcon.png --position topRight
+badgy small A ~/MyIcon.png --position topRight --tint-color '#000000'
 ```
 <p align="center">
 <img src="Assets/a_small_sample.png" title="badgy small">
@@ -110,17 +111,18 @@ Usage: badgy long <labelText> <icon> [options]
 Add rectangular label to app icon
 
 Options:
-  -a, --angle <value>       Rotation angle of the badge
-  -h, --help                Show help information
-  -p, --position <value>    Position on which to place the badge
-  -r, --replace             Indicates Badgy should replace the input icon
-                            Only works if input is of format .appiconasset
-  -v, --verbose             Log tech details for nerds
+  -a, --angle <value>         Rotation angle of the badge
+  -c, --color <value>         Specify badge color with a hexadecimal color code
+  -h, --help                  Show help information
+  -p, --position <value>      Position on which to place the badge
+  -r, --replace               Indicates Badgy should replace the input icon
+  -t, --tint-color <value>    Specify badge text/tint color with a hexadecimal color code
+  -v, --verbose               Log tech details for nerds
 ```
 
 #### Example
 ```sh
-badgy long BETA ~/MyIcon.png --angle 15 --position bottom
+badgy long BETA ~/MyIcon.png --angle 15 --position bottom --tint-color '#000000'
 ```
 <p align="center">
 <img src="Assets/beta_long_sample.png" title="badgy long">

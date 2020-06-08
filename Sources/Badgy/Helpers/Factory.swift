@@ -15,11 +15,13 @@ struct Factory {
     
     func makeBadge(with label: String,
                    colorHexCode: String? = nil,
+                   tintColorHexCode: String? = nil,
                    angle: Int? = nil,
                    inFolder folder: Path,
                    completion: @escaping BadgeProductionResponse) throws {
         
         let color = colorHexCode ?? colors.randomElement()!
+        let tintColor = tintColorHexCode ?? "white"
         
         do {
             let folderBase = folder.absolute().description
@@ -44,7 +46,7 @@ struct Factory {
                 "-gravity", "Center",
                 "-weight","700",
                 "-pointsize", "180",
-                "-fill", "white",
+                "-fill", "\(tintColor)",
                 "caption:\(label)",
                 "\(folderBase)/bottom.png"
             )
