@@ -95,7 +95,7 @@ Options:
 
 #### Example
 ```sh
-badgy small A ~/MyIcon.png --position topRight --tint-color '#000000'
+badgy small A ~/MyIcon.png --position topRight
 ```
 <p align="center">
 <img src="Assets/a_small_sample.png" title="badgy small">
@@ -122,10 +122,23 @@ Options:
 
 #### Example
 ```sh
-badgy long BETA ~/MyIcon.png --angle 15 --position bottom --tint-color '#000000'
+badgy long BETA ~/MyIcon.png --angle 15 --position bottom
 ```
 <p align="center">
 <img src="Assets/beta_long_sample.png" title="badgy long">
+</p>
+
+### Choose your colors
+
+You can change the badge color and the tint/text color with `-c, --color` and `-t, -tint-color`.
+If not specified, as in the examples above, the badge color is randomly selected while the tint color is always white.
+
+#### Example
+```sh
+badgy long TEST ~/MyIcon.png --angle 15 --position bottom --color '#FFD700' --tint-color '#8B7500'
+```
+<p align="center">
+<img src="Assets/test_long_sample.png" title="badgy long color">
 </p>
 
 ### Replace your icon directly
