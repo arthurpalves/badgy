@@ -141,6 +141,8 @@ badgy long TEST ~/MyIcon.png --angle 15 --position bottom --color '#FFD700' --ti
 <img src="Assets/test_long_sample.png" title="badgy long color">
 </p>
 
+If a human readable color format is your dub, then check out a full list of [supported named colors](https://imagemagick.org/script/color.php#color_names).
+
 ### Replace your icon directly
 
 The acceptable formats for your input icon are: `.png`, `.jpg` and `.appiconasset`.
