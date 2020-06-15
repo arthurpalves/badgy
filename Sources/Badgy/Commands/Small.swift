@@ -50,14 +50,14 @@ final class Small: DependencyManager, Command, IconSetDelegate {
     var position: String?
     
     @Key("-c", "--color",
-         description: "Specify badge color with a hexadecimal color code",
-         validation: [Validation.hexColorCode()]
+         description: "Specify badge color with a hexadecimal color code or a named color",
+         validation: [Validation.colorCode()]
     )
     var color: String?
     
     @Key("-t", "--tint-color",
-         description: "Specify badge text/tint color with a hexadecimal color code",
-         validation: [Validation.hexColorCode()]
+         description: "Specify badge text/tint color with a hexadecimal color code or a named color",
+         validation: [Validation.colorCode()]
     )
     var tintColor: String?
     
