@@ -1,28 +1,20 @@
 //
 //  Badgy
 //
-//  Created by Arthur Alves on 30/05/2020.
-//
 
 import Foundation
 import SwiftCLI
 
 extension Validation where T == String {
-    static func hexColorCode() -> Self {
-        let message = "Specify valid hex color code in a case insensitive format '#rrbbgg' | '#rrbbggaa'"
-        
-        return Validation<String>.custom(message) { (input) in
-            guard NSRegularExpression.hexColorCode.matches(input) else {
-                Logger.shared.logError("❌ ", item: "Input color '\(input)' doesn't have a valid format")
-                return false
-            }
-            
-            return true
-        }
+    /// Checks whether the `input` matches '#rrbbgg' | '#rrbbggaa' color formats
+    static func isHexColor(_ input: String) -> Bool {
+        NSRegularExpression.hexColorCode.matches(input)
     }
 }
 
 private extension NSRegularExpression {
+    /// Regular expression that matches '#rrbbgg' and '#rrbbggaa' formats
+    ///
     /// `^` asserts position at start of a line
     /// `#` matches the character # literally
     ///
