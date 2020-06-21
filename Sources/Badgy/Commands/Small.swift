@@ -95,47 +95,38 @@ final class Small: DependencyManager, Command, IconSetDelegate {
     
     private func process(baseIcon: String) throws {
         let folder = Path("Badgy")
-        factory.makeSmall(with: char, colorHexCode: color, tintColorHexCode: tintColor, inFolder: folder, completion: { (result) in
-            switch result {
-            case .success(_):
-                try self.factory.appendBadge(to: baseIcon,
-                                         folder: folder,
-                                         label: self.char,
-                                         position: Position(rawValue: self.position ?? "bottomLeft")) {
-                                            (result) in
-                    switch result {
-                    case .success(let filename):
-                        let filePath = Path(filename)
-                        guard filePath.exists
-                        else {
-                            self.logger.logError("❌ ", item: "Failed to create badge")
-                            return
-                        }
-                        self.logger.logInfo(item: "Icon with badge '\(self.char)' created at '\(filePath.absolute().description)'")
-                        try self.factory.cleanUp(folder: folder)
-                        
-                        if ReplaceFlag.value, let iconSet = self.iconSetImages {
-                            self.replace(iconSet: iconSet, with: filePath)
-                        } else {
-                            self.resize(filePath: filePath)
-                        }
-                    case .failure(let error):
-                        try self.factory.cleanUp(folder: folder)
-                        throw CLI.Error(message: error.localizedDescription)
-                    }
-                }
-            case .failure(let error):
-                try self.factory.cleanUp(folder: folder)
-                throw CLI.Error(message: error.localizedDescription)
+        do {
+            defer { try? self.factory.cleanUp(folder: folder) }
+            
+            _ = try factory.makeSmall(
+                with: char,
+                colorHexCode: color,
+                tintColorHexCode: tintColor,
+                inFolder: folder
+            )
+            
+            let filename = try factory.appendBadge(
+                to: baseIcon,
+                folder: folder,
+                label: self.char,
+                position: Position(rawValue: self.position ?? "bottomLeft")
+            )
+            
+            let filePath = Path(filename)
+            guard filePath.exists else {
+                logger.logError("❌ ", item: "Failed to create badge")
+                return
             }
-        })
-    }
-    
-    private func resize(filePath: Path) {
-        factory.resize(filename: filePath)
-    }
-    
-    private func replace(iconSet: IconSetImages, with newBadgeFile: Path) {
-        factory.replace(iconSet, with: newBadgeFile)
+            
+            logger.logInfo(item: "Icon with badge '\(char)' created at '\(filePath.absolute().description)'")
+            
+            if ReplaceFlag.value, let iconSet = iconSetImages {
+                factory.replace(iconSet, with: filePath)
+            } else {
+                factory.resize(filename: filePath)
+            }
+        } catch {
+            throw CLI.Error(message: error.localizedDescription)
+        }
     }
 }

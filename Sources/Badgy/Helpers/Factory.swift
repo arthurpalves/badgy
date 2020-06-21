@@ -17,13 +17,12 @@ struct Factory {
                    colorHexCode: String? = nil,
                    tintColorHexCode: String? = nil,
                    angle: Int? = nil,
-                   inFolder folder: Path,
-                   completion: @escaping BadgeProductionResponse) throws {
-        
-        let color = colorHexCode ?? colors.randomElement()!
-        let tintColor = tintColorHexCode ?? "white"
+                   inFolder folder: Path) throws -> String {
         
         do {
+            let color = colorHexCode ?? colors.randomElement()!
+            let tintColor = tintColorHexCode ?? "white"
+            
             let folderBase = folder.absolute().description
             if !folder.isDirectory {
                 try Task.run("mkdir", folderBase)
@@ -64,39 +63,37 @@ struct Factory {
                     "\(folderBase)/badge.png"
                 )
             }
-            try completion(.success("\(folderBase)/badge.png"))
             
-        } catch let error {
+            return "\(folderBase)/badge.png"
+        } catch {
             print("FAILED: \(error.localizedDescription)")
-            try? completion(.failure(error))
+            throw error
         }
     }
     
-    func appendBadge(to baseIcon: String, folder: Path, label: String,
-                     position: Position?, completion: @escaping BadgeProductionResponse) throws {
+    func appendBadge(to baseIcon: String,
+                     folder: Path,
+                     label: String,
+                     position: Position?) throws -> String {
         let position = position ?? .bottom
         
-        do {
-            let folderBase = folder.absolute().description
-            let finalFilename = "\(folderBase)/\(label).png"
-            
-            try Task.run(
-                "convert", baseIcon,
-                "-resize", "1024x",
-                finalFilename
-            )
-            
-            try Task.run(
-                "convert", "-composite",
-                "-gravity", "\(position.cardinal)",
-                finalFilename, "\(folderBase)/badge.png",
-                finalFilename
-            )
-            
-            try completion(.success(finalFilename))
-        } catch let error {
-            try? completion(.failure(error))
-        }
+        let folderBase = folder.absolute().description
+        let finalFilename = "\(folderBase)/\(label).png"
+        
+        try Task.run(
+            "convert", baseIcon,
+            "-resize", "1024x",
+            finalFilename
+        )
+        
+        try Task.run(
+            "convert", "-composite",
+            "-gravity", "\(position.cardinal)",
+            finalFilename, "\(folderBase)/badge.png",
+            finalFilename
+        )
+        
+        return finalFilename
     }
     
     func cleanUp(folder: Path) throws {
