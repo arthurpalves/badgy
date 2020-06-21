@@ -83,6 +83,14 @@ extension Badgy {
                 }
             }
         }
+        
+        func run() throws {
+            var pipeline = IconSignPipeline.make(withOptions: options)
+            pipeline.position = options.position ?? Position.bottom
+            pipeline.angle = angle
+
+            try pipeline.execute()
+        }
     }
 }
 
@@ -100,7 +108,27 @@ extension Badgy {
                 throw ValidationError("Label should contain maximum 1 characters")
             }
         }
+        
+        func run() throws {
+            var pipeline = IconSignPipeline.make(withOptions: options)
+            pipeline.position = options.position ?? Position.bottom
+    
+            try pipeline.execute()
+        }
     }
 }
 
 extension Position: ExpressibleByArgument { }
+
+private extension IconSignPipeline {
+    static func make(withOptions options: Badgy.Options) -> IconSignPipeline {
+        var pipeline = IconSignPipeline(icon: options.icon, label: options.label)
+        
+        pipeline.position = options.position
+        pipeline.color = options.color?.value
+        pipeline.tintColor = options.tintColor?.value
+        pipeline.replace = options.replace
+        
+        return pipeline
+    }
+}
