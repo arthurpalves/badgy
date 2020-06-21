@@ -42,6 +42,8 @@ extension Badgy {
             guard DependencyManager().areDependenciesInstalled() else {
                 throw ValidationError("Missing dependencies. Run: 'brew install imagemagick'")
             }
+            
+            Logger.shared.verbose = verbose
         }
     }
 }

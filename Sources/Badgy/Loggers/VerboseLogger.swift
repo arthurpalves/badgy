@@ -46,8 +46,6 @@ extension Date {
 }
 
 extension VerboseLogger {
-    public var verbose: Bool { VerboseFlag.value }
-    
     public func log(_ prefix: Any = "", item: Any, indentationLevel: Int = 0, color: ShellColor = .neutral, logLevel: LogLevel = .none) {
         if logLevel == .verbose {
             guard verbose else { return }

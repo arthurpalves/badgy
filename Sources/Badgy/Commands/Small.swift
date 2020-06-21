@@ -67,6 +67,8 @@ final class Small: DependencyManager, Command, IconSetDelegate {
     var iconSetImages: IconSetImages?
     
     public func execute() throws {
+        Logger.shared.verbose = VerboseFlag.value
+
         guard areDependenciesInstalled()
             else {
                 throw CLI.Error(message: "Missing dependencies. Run: 'brew install imagemagick'")
