@@ -26,10 +26,20 @@ extension Badgy {
         @Option(help: "Position on which to place the badge")
         var position: Position?
         
-        @Option(help: "Specify badge color with a hexadecimal color code format '#rrbbgg' | '#rrbbggaa' or a named color format ('red', 'white', etc.)")
+        @Option(help: """
+        Specify a valid hex color code in a case insensitive format: '#rrbbgg' | '#rrbbggaa'
+            or
+        Provide a named color: 'snow' | 'snow1' | ...
+        Complete list of named colors: https://imagemagick.org/script/color.php#color_names
+        """)
         var color: ColorCode?
         
-        @Option(help: "Specify badge text/tint color with a hexadecimal color code format ('#rrbbgg' | '#rrbbggaa') or a named color format ('red', 'white', etc.)")
+        @Option(help: """
+        Specify a valid hex color code in a case insensitive format: '#rrbbgg' | '#rrbbggaa'
+            or
+        Provide a named color: 'snow' | 'snow1' | ...
+        Complete list of named colors: https://imagemagick.org/script/color.php#color_names
+        """)
         var tintColor: ColorCode?
         
         @Flag(help: "Indicates Badgy should replace the input icon")
