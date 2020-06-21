@@ -52,4 +52,21 @@ extension Factory {
                 }
         }
     }
+    
+    func replace(_ iconSet: IconSet, with newBadgeFile: Path) {
+        iconSet.images
+            .forEach { (info) in
+                Logger.shared.logInfo("Replacing: ", item: info.image, color: .purple)
+                do {
+                    try Task.run(
+                        "convert", newBadgeFile.absolute().description,
+                        "-resize", info.size.description(),
+                        info.image.absolute().description
+                    )
+                } catch {
+                    Logger.shared.logError("❌ ",
+                                           item: "Failed to replace \(info.image)")
+                }
+        }
+    }
 }

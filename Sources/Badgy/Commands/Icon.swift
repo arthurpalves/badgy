@@ -33,3 +33,14 @@ enum Icon {
         throw ValidationError("Input file or directory doesn't have a valid format")
     }
 }
+
+extension Icon {
+    var base: Path? {
+        switch self {
+        case .plain(let path):
+            return path
+        case .set(let set):
+            return set.largest()
+        }
+    }
+}

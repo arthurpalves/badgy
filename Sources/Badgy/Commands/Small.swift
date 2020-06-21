@@ -68,33 +68,22 @@ final class Small: DependencyManager, Command, IconSetDelegate {
     
     public func execute() throws {
         guard areDependenciesInstalled()
-        else {
-            throw CLI.Error(message: "Missing dependencies. Run: 'brew install imagemagick'")
+            else {
+                throw CLI.Error(message: "Missing dependencies. Run: 'brew install imagemagick'")
         }
         logger.logSection("$ ", item: "badgy small \"\(char)\" \"\(icon)\"", color: .ios)
         
-        var baseIcon = icon
-        if isIconSet(Path(icon)) {
-            logger.logDebug("", item: "Finding the largest image in the .appiconset", color: .purple)
-            
-            iconSetImages = iconSetImages(for: Path(icon))
-            
-            guard
-                let largest = iconSetImages?.largest,
-                largest.size.width > 0
-            else {
-                logger.logError("❌ ", item: "Couldn't find the largest image in the set")
-                exit(1)
-            }
-            baseIcon = largest.image.absolute().description
-            logger.logDebug("Found: ", item: baseIcon, color: .purple)
+        let baseIcon = try Icon(path: icon)
+        try process(baseIcon)
+    }
+        
+    private func process(_ icon: Icon) throws {
+        let folder = Path("Badgy")
+        
+        guard let baseIcon = icon.base else {
+            throw CLI.Error(message: "Couldn't find the largest image in the set")
         }
         
-        try process(baseIcon: baseIcon)
-    }
-    
-    private func process(baseIcon: String) throws {
-        let folder = Path("Badgy")
         do {
             defer { try? self.factory.cleanUp(folder: folder) }
             
@@ -106,7 +95,7 @@ final class Small: DependencyManager, Command, IconSetDelegate {
             )
             
             let filename = try factory.appendBadge(
-                to: baseIcon,
+                to: baseIcon.absolute().description,
                 folder: folder,
                 label: self.char,
                 position: Position(rawValue: self.position ?? "bottomLeft")
@@ -120,7 +109,7 @@ final class Small: DependencyManager, Command, IconSetDelegate {
             
             logger.logInfo(item: "Icon with badge '\(char)' created at '\(filePath.absolute().description)'")
             
-            if ReplaceFlag.value, let iconSet = iconSetImages {
+            if ReplaceFlag.value, case .set(let iconSet) = icon {
                 factory.replace(iconSet, with: filePath)
             } else {
                 factory.resize(filename: filePath)
