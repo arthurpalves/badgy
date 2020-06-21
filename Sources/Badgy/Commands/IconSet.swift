@@ -17,11 +17,11 @@ struct IconSet {
 }
 
 extension IconSet {
-    static let setExtension = ".appiconset"
-    static let imageExtensions = Set([".png", ".jpg", ".jpeg"])
+    static let setExtension = "appiconset"
+    static let imageExtensions = Set(["png", "jpg", "jpeg"])
 
     static func makeFromFolder(at path: Path) -> IconSet? {
-        guard path.isDirectory && path.lastComponent.contains(setExtension) else {
+        guard path.isDirectory && path.extension == setExtension else {
             return nil
         }
         
@@ -41,7 +41,7 @@ extension IconSet {
 
 private extension ImageSize {
     static func makeFromImage(at imagePath: Path) -> ImageSize? {
-        guard IconSet.imageExtensions.contains(imagePath.lastComponent) else {
+        guard IconSet.imageExtensions.contains(imagePath.extension ?? "") else {
             return nil
         }
         

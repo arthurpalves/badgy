@@ -20,7 +20,7 @@ extension Badgy {
         @Argument(help :"Specify badge text")
         var label: String
         
-        @Argument(help :"Specify path to icon with format .png | .jpg | .appiconset", transform: Icon.init(path:))
+        @Argument(help :"Specify path to icon with format .png | .jpg | .jpeg | .appiconset", transform: Icon.init(path:))
         var icon: Icon
         
         @Option(help: "Position on which to place the badge")

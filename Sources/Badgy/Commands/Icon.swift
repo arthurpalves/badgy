@@ -25,7 +25,7 @@ enum Icon {
             return
         }
                 
-        if IconSet.imageExtensions.contains(path.lastComponent) {
+        if IconSet.imageExtensions.contains(path.extension ?? "") {
             self = .plain(path)
             return
         }
