@@ -16,4 +16,8 @@ cli.commands = [
 cli.globalOptions.append(ReplaceFlag)
 cli.globalOptions.append(VerboseFlag)
 
+#if ARGUMENT_PARSER
+Badgy.main()
+#else
 _ = cli.go()
+#endif
