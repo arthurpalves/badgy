@@ -12,7 +12,7 @@ extension Validation where T == String {
     }
 }
 
-private extension NSRegularExpression {
+extension NSRegularExpression {
     /// Regular expression that matches '#rrbbgg' and '#rrbbggaa' formats
     ///
     /// `^` asserts position at start of a line
