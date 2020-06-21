@@ -87,6 +87,8 @@ extension Badgy {
         }
         
         func run() throws {
+            Logger.shared.logSection("$ ", item: "badgy long \"\(options.label)\" \"\(options.icon.path)\"", color: .ios)
+            
             var pipeline = IconSignPipeline.make(withOptions: options)
             pipeline.position = options.position ?? Position.bottom
             pipeline.angle = angle
@@ -112,6 +114,8 @@ extension Badgy {
         }
         
         func run() throws {
+            Logger.shared.logSection("$ ", item: "badgy small \"\(options.label)\" \"\(options.icon.path)\"", color: .ios)
+
             var pipeline = IconSignPipeline.make(withOptions: options)
             pipeline.position = options.position ?? Position.bottom
     

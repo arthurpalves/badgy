@@ -9,7 +9,8 @@ import SwiftCLI
 struct IconSet {
     typealias ImageInfo = (image: Path, size: ImageSize)
     
-    var images: [ImageInfo]
+    let path: Path
+    let images: [ImageInfo]
     
     func largest() -> Path? {
         images.max { lhs, rhs in lhs.size.width < rhs.size.width }.flatMap { $0.image }
@@ -35,7 +36,7 @@ extension IconSet {
             }
         }
         
-        return IconSet(images: images)
+        return IconSet(path: path, images: images)
     }
 }
 
