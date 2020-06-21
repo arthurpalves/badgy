@@ -81,10 +81,14 @@ private extension Icon {
         case .plain(let path):
             return path
         case .set(let set):
+            Logger.shared.logDebug("", item: "Finding the largest image in the .appiconset", color: .purple)
+            
             guard let path = set.largest() else {
+                Logger.shared.logError("❌ ", item: "Couldn't find the largest image in the set")
                 throw IconSignPipeline.Error(message: "Couldn't find the largest image in the set")
             }
             
+            Logger.shared.logDebug("Found: ", item: path, color: .purple)
             return path
         }
     }

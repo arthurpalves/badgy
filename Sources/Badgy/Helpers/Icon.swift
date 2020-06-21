@@ -17,7 +17,9 @@ enum Icon {
         let path = Path(path)
         
         guard path.exists else {
-            throw ValidationError("Input file or directory doesn't exist")
+            let message = "Input file or directory doesn't exist"
+            Logger.shared.logError("❌ ", item: message)
+            throw ValidationError(message)
         }
         
         if let set = IconSet.makeFromFolder(at: path) {
@@ -29,8 +31,10 @@ enum Icon {
             self = .plain(path)
             return
         }
-        
-        throw ValidationError("Input file or directory doesn't have a valid format")
+
+        let message = "Input file or directory doesn't have a valid format"
+        Logger.shared.logError("❌ ", item: message)
+        throw ValidationError(message)
     }
 }
 
