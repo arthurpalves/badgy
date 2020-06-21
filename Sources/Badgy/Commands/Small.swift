@@ -73,49 +73,20 @@ final class Small: DependencyManager, Command, IconSetDelegate {
         }
         logger.logSection("$ ", item: "badgy small \"\(char)\" \"\(icon)\"", color: .ios)
         
-        let baseIcon = try Icon(path: icon)
-        try process(baseIcon)
+        try process()
     }
         
-    private func process(_ icon: Icon) throws {
-        let folder = Path("Badgy")
+    private func process() throws {
+        var pipeline = IconSignPipeline(
+            icon: try Icon(path: icon),
+            label: char
+        )
         
-        guard let baseIcon = icon.base else {
-            throw CLI.Error(message: "Couldn't find the largest image in the set")
-        }
+        pipeline.position = Position(rawValue: self.position ?? "bottomLeft")
+        pipeline.color = color
+        pipeline.tintColor = color
+        pipeline.replace = ReplaceFlag.value
         
-        do {
-            defer { try? self.factory.cleanUp(folder: folder) }
-            
-            _ = try factory.makeSmall(
-                with: char,
-                colorHexCode: color,
-                tintColorHexCode: tintColor,
-                inFolder: folder
-            )
-            
-            let filename = try factory.appendBadge(
-                to: baseIcon.absolute().description,
-                folder: folder,
-                label: self.char,
-                position: Position(rawValue: self.position ?? "bottomLeft")
-            )
-            
-            let filePath = Path(filename)
-            guard filePath.exists else {
-                logger.logError("❌ ", item: "Failed to create badge")
-                return
-            }
-            
-            logger.logInfo(item: "Icon with badge '\(char)' created at '\(filePath.absolute().description)'")
-            
-            if ReplaceFlag.value, case .set(let iconSet) = icon {
-                factory.replace(iconSet, with: filePath)
-            } else {
-                factory.resize(filename: filePath)
-            }
-        } catch {
-            throw CLI.Error(message: error.localizedDescription)
-        }
+        try pipeline.execute()
     }
 }

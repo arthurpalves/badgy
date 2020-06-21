@@ -86,52 +86,21 @@ final class Long: DependencyManager, Command, IconSetDelegate {
                 throw CLI.Error(message: "Angle should be within range -180 ... 180")
             }
         }
-        
-        let baseIcon = try Icon(path: icon)
-        try process(baseIcon)
     }
     
-    private func process(_ icon: Icon) throws {
-        let folder = Path("Badgy")
+    private func process() throws {
+        var pipeline = IconSignPipeline(
+            icon: try Icon(path: icon),
+            label: labelText
+        )
         
-        guard let baseIcon = icon.base else {
-            throw CLI.Error(message: "Couldn't find the largest image in the set")
-        }
+        pipeline.position = Position(rawValue: position ?? "bottom")
+        pipeline.color = color
+        pipeline.tintColor = color
+        pipeline.angle = angleInt
+        pipeline.replace = ReplaceFlag.value
         
-        do {
-            defer { try? self.factory.cleanUp(folder: folder) }
-            
-            _ = try factory.makeBadge(
-                with: labelText,
-                colorHexCode: color,
-                tintColorHexCode: tintColor,
-                angle: angleInt,
-                inFolder: folder
-            )
-            
-            let filename = try factory.appendBadge(
-                to: baseIcon.absolute().description,
-                folder: folder,
-                label: self.labelText,
-                position: Position(rawValue: self.position ?? "bottom")
-            )
-            
-            let filePath = Path(filename)
-            guard filePath.exists else {
-                logger.logError("❌ ", item: "Failed to create badge")
-                return
-            }
-            
-            logger.logInfo(item: "Icon with badge '\(labelText)' created at '\(filePath.absolute().description)'")
-            
-            if ReplaceFlag.value, case .set(let iconSet) = icon {
-                factory.replace(iconSet, with: filePath)
-            } else {
-                factory.resize(filename: filePath)
-            }
-        } catch {
-            throw CLI.Error(message: error.localizedDescription)
-        }
+        try pipeline.execute()
     }
 }
 
