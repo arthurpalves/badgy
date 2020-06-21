@@ -26,11 +26,11 @@ extension Badgy {
         @Option(help: "Position on which to place the badge")
         var position: Position?
         
-        @Option(help: "Specify badge color with a hexadecimal color code format '#rrbbgg' | '#rrbbggaa'")
-        var color: HexColor?
+        @Option(help: "Specify badge color with a hexadecimal color code format '#rrbbgg' | '#rrbbggaa' or a named color format ('red', 'white', etc.)")
+        var color: ColorCode?
         
-        @Option(help: "Specify badge text/tint color with a hexadecimal color code format '#rrbbgg' | '#rrbbggaa'")
-        var tintColor: HexColor?
+        @Option(help: "Specify badge text/tint color with a hexadecimal color code format ('#rrbbgg' | '#rrbbggaa') or a named color format ('red', 'white', etc.)")
+        var tintColor: ColorCode?
         
         @Flag(help: "Indicates Badgy should replace the input icon")
         var replace: Bool
@@ -104,18 +104,6 @@ extension Badgy {
 }
 
 extension Position: ExpressibleByArgument { }
-
-struct HexColor: ExpressibleByArgument {
-    let value: String
-    
-    init?(argument: String) {
-        guard NSRegularExpression.hexColorCode.matches(argument) else {
-            return nil
-        }
-        
-        value = argument
-    }
-}
 
 struct IconPath {
     static let supportedFormats = Set([
