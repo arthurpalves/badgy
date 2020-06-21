@@ -20,8 +20,8 @@ extension Badgy {
         @Argument(help :"Specify badge text")
         var label: String
         
-        @Argument(help :"Specify path to icon with format .png | .jpg | .appiconset", transform: IconPath.init(path:))
-        var icon: IconPath
+        @Argument(help :"Specify path to icon with format .png | .jpg | .appiconset", transform: Icon.init(path:))
+        var icon: Icon
         
         @Option(help: "Position on which to place the badge")
         var position: Position?
@@ -104,28 +104,3 @@ extension Badgy {
 }
 
 extension Position: ExpressibleByArgument { }
-
-struct IconPath {
-    static let supportedFormats = Set([
-        ".png", ".jpg", ".jpeg", ".appiconset"
-    ])
-    
-    let path: Path
-    
-    init(path: String) throws {
-        let path = Path(path)
-        
-        guard path.exists else {
-            throw ValidationError("Input file doesn't exist")
-        }
-        
-        let isSupportedFormat = IconPath.supportedFormats.contains {
-            path.lastComponent.contains($0)
-        }
-        guard isSupportedFormat else {
-            throw ValidationError("Input file doesn't have a valid format")
-        }
-        
-        self.path = path
-    }
-}
