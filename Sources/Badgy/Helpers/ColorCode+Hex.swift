@@ -10,14 +10,14 @@ import Foundation
 extension ColorCode {
     /// Checks whether the `input` matches the valid color formats
     ///
-    /// Valid colors formats are `#rrbbgg` | `#rrbbggaa`
+    /// Valid colors formats are `#rrggbb` | `#rrggbbaa`
     static func isHexColor(_ hex: String) -> Bool {
         NSRegularExpression.hexColorCode.matches(hex)
     }
 }
 
 private extension NSRegularExpression {
-    /// Regular expression that matches '#rrbbgg' and '#rrbbggaa' formats
+    /// Regular expression that matches '#rrggbb' and '#rrggbbaa' formats
     ///
     /// `^` asserts position at start of a line
     /// `#` matches the character # literally
