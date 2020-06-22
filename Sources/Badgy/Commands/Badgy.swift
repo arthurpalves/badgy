@@ -23,8 +23,8 @@ extension Badgy {
         @Argument(help :"Specify path to icon with format .png | .jpg | .jpeg | .appiconset", transform: Icon.init(path:))
         var icon: Icon
         
-        @Option(help: "Position on which to place the badge")
-        var position: Position?
+        @Option(default: .bottom, help: "Position on which to place the badge")
+        var position: Position
         
         @Option(help: """
         Specify a valid hex color code in a case insensitive format: '#rrggbb' | '#rrggbbaa'
@@ -75,17 +75,8 @@ extension Badgy {
                 throw ValidationError("Label should contain maximum 4 characters")
             }
             
-            if let position = options.position {
-                let supportedPositions: [Position] = [
-                    .top, .left, .bottom, .right, .center
-                ]
-                guard supportedPositions.contains(position) else {
-                    let formatted = supportedPositions
-                        .map { $0.rawValue }
-                        .joined(separator: " | ")
-                    
-                    throw ValidationError("Invalid provided position, supported positions are: \(formatted)")
-                }
+            guard options.position.isValidForLongLabels else {
+                throw ValidationError("Invalid provided position, supported positions are: \(Position.longLabelPositions.formatted())")
             }
             
             let validAngleRange = -180...180
@@ -98,7 +89,6 @@ extension Badgy {
             Logger.shared.logSection("$ ", item: "badgy long \"\(options.label)\" \"\(options.icon.path)\"", color: .ios)
             
             var pipeline = IconSignPipeline.make(withOptions: options)
-            pipeline.position = options.position ?? Position.bottom
             pipeline.angle = angle
 
             try pipeline.execute()
@@ -124,9 +114,7 @@ extension Badgy {
         func run() throws {
             Logger.shared.logSection("$ ", item: "badgy small \"\(options.label)\" \"\(options.icon.path)\"", color: .ios)
 
-            var pipeline = IconSignPipeline.make(withOptions: options)
-            pipeline.position = options.position ?? Position.bottom
-    
+            let pipeline = IconSignPipeline.make(withOptions: options)
             try pipeline.execute()
         }
     }
@@ -144,5 +132,15 @@ private extension IconSignPipeline {
         pipeline.replace = options.replace
         
         return pipeline
+    }
+}
+
+private extension Position {
+    static let longLabelPositions: Set<Position> = Set([
+        .top, .left, .bottom, .right, .center
+    ])
+        
+    var isValidForLongLabels: Bool {
+        Position.longLabelPositions.contains(self)
     }
 }

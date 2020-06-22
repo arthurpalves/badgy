@@ -35,3 +35,9 @@ enum Position: String {
         }
     }
 }
+
+extension Sequence where Element == Position {
+    func formatted() -> String {
+        map { $0.rawValue}.joined(separator: " | ")
+    }
+}
