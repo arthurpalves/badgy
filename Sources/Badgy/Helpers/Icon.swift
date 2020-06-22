@@ -1,9 +1,6 @@
 //
-//  File.swift
-//  
-//
-//  Created by yahor mikhnevich on 6/21/20.
-//
+//  Badgy
+// 
 
 import Foundation
 import ArgumentParser

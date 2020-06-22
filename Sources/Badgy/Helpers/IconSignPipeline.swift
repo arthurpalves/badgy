@@ -2,7 +2,6 @@
 //  Badgy
 //
 
-
 import Foundation
 import PathKit
 
