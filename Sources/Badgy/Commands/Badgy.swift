@@ -67,8 +67,8 @@ extension Badgy {
         @OptionGroup()
         var options: Badgy.Options
         
-        @Option(help: "Rotation angle of the badge")
-        var angle: Int?
+        @Option(default: 0, help: "The rotation angle of the badge in degrees range of -180 ... 180")
+        var angle: Int
         
         func validate() throws {
             guard options.label.count <= 4 else {
@@ -89,10 +89,8 @@ extension Badgy {
             }
             
             let validAngleRange = -180...180
-            if let angle = angle {
-                guard validAngleRange.contains(angle) else {
-                    throw ValidationError("Angle should be within range: \(validAngleRange)")
-                }
+            guard validAngleRange.contains(angle) else {
+                throw ValidationError("Angle should be within range: \(validAngleRange)")
             }
         }
         
