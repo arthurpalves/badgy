@@ -23,9 +23,6 @@ extension Badgy {
         @Argument(help :"Specify path to icon with format .png | .jpg | .jpeg | .appiconset", transform: Icon.init(path:))
         var icon: Icon
         
-        @Option(default: .bottom, help: "Position on which to place the badge")
-        var position: Position
-        
         @Option(help: """
         Specify a valid hex color code in a case insensitive format: '#rrggbb' | '#rrggbbaa'
             or
@@ -67,6 +64,9 @@ extension Badgy {
         @OptionGroup()
         var options: Badgy.Options
         
+        @Option(default: .bottom, help: "Position on which to place the badge. Supported positions:  \(Position.longLabelPositions.formatted())")
+        var position: Position
+        
         @Option(default: 0, help: "The rotation angle of the badge in degrees range of -180 ... 180")
         var angle: Int
         
@@ -75,7 +75,7 @@ extension Badgy {
                 throw ValidationError("Label should contain maximum 4 characters")
             }
             
-            guard options.position.isValidForLongLabels else {
+            guard position.isValidForLongLabels else {
                 throw ValidationError("Invalid provided position, supported positions are: \(Position.longLabelPositions.formatted())")
             }
             
@@ -89,6 +89,7 @@ extension Badgy {
             Logger.shared.logSection("$ ", item: "badgy long \"\(options.label)\" \"\(options.icon.path)\"", color: .ios)
             
             var pipeline = IconSignPipeline.make(withOptions: options)
+            pipeline.position = position
             pipeline.angle = angle
 
             try pipeline.execute()
@@ -105,6 +106,9 @@ extension Badgy {
         @OptionGroup()
         var options: Badgy.Options
         
+        @Option(default: .bottomLeft, help: "Position on which to place the badge. Supported positions: \(Position.allCases.formatted())")
+        var position: Position
+        
         func validate() throws {
             guard options.label.count <= 1 else {
                 throw ValidationError("Label should contain maximum 1 characters")
@@ -114,7 +118,9 @@ extension Badgy {
         func run() throws {
             Logger.shared.logSection("$ ", item: "badgy small \"\(options.label)\" \"\(options.icon.path)\"", color: .ios)
 
-            let pipeline = IconSignPipeline.make(withOptions: options)
+            var pipeline = IconSignPipeline.make(withOptions: options)
+            pipeline.position = position
+            
             try pipeline.execute()
         }
     }
@@ -126,7 +132,6 @@ private extension IconSignPipeline {
     static func make(withOptions options: Badgy.Options) -> IconSignPipeline {
         var pipeline = IconSignPipeline(icon: options.icon, label: options.label)
         
-        pipeline.position = options.position
         pipeline.color = options.color?.value
         pipeline.tintColor = options.tintColor?.value
         pipeline.replace = options.replace
