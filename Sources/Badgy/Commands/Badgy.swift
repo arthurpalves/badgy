@@ -111,7 +111,7 @@ extension Badgy {
         
         func validate() throws {
             guard options.label.count <= 1 else {
-                throw ValidationError("Label should contain maximum 1 characters")
+                throw ValidationError("Label should contain maximum 1 character")
             }
         }
         
