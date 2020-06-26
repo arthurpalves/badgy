@@ -101,12 +101,15 @@ struct Factory {
     
     func cleanUp(folder: Path) throws {
         do {
-            let folderBase = folder.absolute().description
+            let icons = [
+                folder + Path("top.png"),
+                folder + Path("bottom.png"),
+                folder + Path("badge.png")
+            ]
             
-            try Task.run("rm", "-rf",
-                         "\(folderBase)/top.png",
-                         "\(folderBase)/bottom.png",
-                         "\(folderBase)/badge.png")
+            for icon in icons {
+                try icon.delete()
+            }
         } catch {
             throw CLI.Error(message: "Failed to clean up temporary files")
         }
