@@ -10,6 +10,8 @@ import SwiftCLI
 public class Logger: VerboseLogger {
     static let shared = Logger()
     
+    public var verbose: Bool = false
+    
     func logError(_ prefix: Any = "", item: Any, color: ShellColor = .red) {
         log(item: "--------------------------------------------------------------------------------------", logLevel: .error)
         log(prefix, item: item, color: color, logLevel: .error)

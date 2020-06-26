@@ -67,75 +67,28 @@ final class Small: DependencyManager, Command, IconSetDelegate {
     var iconSetImages: IconSetImages?
     
     public func execute() throws {
+        Logger.shared.verbose = VerboseFlag.value
+
         guard areDependenciesInstalled()
-        else {
-            throw CLI.Error(message: "Missing dependencies. Run: 'brew install imagemagick'")
+            else {
+                throw CLI.Error(message: "Missing dependencies. Run: 'brew install imagemagick'")
         }
         logger.logSection("$ ", item: "badgy small \"\(char)\" \"\(icon)\"", color: .ios)
         
-        var baseIcon = icon
-        if isIconSet(Path(icon)) {
-            logger.logDebug("", item: "Finding the largest image in the .appiconset", color: .purple)
-            
-            iconSetImages = iconSetImages(for: Path(icon))
-            
-            guard
-                let largest = iconSetImages?.largest,
-                largest.size.width > 0
-            else {
-                logger.logError("❌ ", item: "Couldn't find the largest image in the set")
-                exit(1)
-            }
-            baseIcon = largest.image.absolute().description
-            logger.logDebug("Found: ", item: baseIcon, color: .purple)
-        }
+        try process()
+    }
         
-        try process(baseIcon: baseIcon)
-    }
-    
-    private func process(baseIcon: String) throws {
-        let folder = Path("Badgy")
-        factory.makeSmall(with: char, colorHexCode: color, tintColorHexCode: tintColor, inFolder: folder, completion: { (result) in
-            switch result {
-            case .success(_):
-                try self.factory.appendBadge(to: baseIcon,
-                                         folder: folder,
-                                         label: self.char,
-                                         position: Position(rawValue: self.position ?? "bottomLeft")) {
-                                            (result) in
-                    switch result {
-                    case .success(let filename):
-                        let filePath = Path(filename)
-                        guard filePath.exists
-                        else {
-                            self.logger.logError("❌ ", item: "Failed to create badge")
-                            return
-                        }
-                        self.logger.logInfo(item: "Icon with badge '\(self.char)' created at '\(filePath.absolute().description)'")
-                        try self.factory.cleanUp(folder: folder)
-                        
-                        if ReplaceFlag.value, let iconSet = self.iconSetImages {
-                            self.replace(iconSet: iconSet, with: filePath)
-                        } else {
-                            self.resize(filePath: filePath)
-                        }
-                    case .failure(let error):
-                        try self.factory.cleanUp(folder: folder)
-                        throw CLI.Error(message: error.localizedDescription)
-                    }
-                }
-            case .failure(let error):
-                try self.factory.cleanUp(folder: folder)
-                throw CLI.Error(message: error.localizedDescription)
-            }
-        })
-    }
-    
-    private func resize(filePath: Path) {
-        factory.resize(filename: filePath)
-    }
-    
-    private func replace(iconSet: IconSetImages, with newBadgeFile: Path) {
-        factory.replace(iconSet, with: newBadgeFile)
+    private func process() throws {
+        var pipeline = IconSignPipeline(
+            icon: try Icon(path: icon),
+            label: char
+        )
+        
+        pipeline.position = Position(rawValue: self.position ?? "bottomLeft")
+        pipeline.color = color
+        pipeline.tintColor = color
+        pipeline.replace = ReplaceFlag.value
+        
+        try pipeline.execute()
     }
 }
