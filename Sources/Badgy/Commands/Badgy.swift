@@ -28,16 +28,17 @@ extension Badgy {
             or
         Provide a named color: 'snow' | 'snow1' | ...
         Complete list of named colors: https://imagemagick.org/script/color.php#color_names
+        (default: randomly selected from \(Factory.colors.joined(separator: " | "))
         """)
         var color: ColorCode?
         
-        @Option(help: """
+        @Option(default: "white", help: """
         Specify a valid hex color code in a case insensitive format: '#rrggbb' | '#rrggbbaa'
             or
         Provide a named color: 'snow' | 'snow1' | ...
         Complete list of named colors: https://imagemagick.org/script/color.php#color_names
         """)
-        var tintColor: ColorCode?
+        var tintColor: ColorCode
         
         @Flag(help: "Indicates Badgy should replace the input icon")
         var replace: Bool
@@ -133,7 +134,7 @@ private extension IconSignPipeline {
         var pipeline = IconSignPipeline(icon: options.icon, label: options.label)
         
         pipeline.color = options.color?.value
-        pipeline.tintColor = options.tintColor?.value
+        pipeline.tintColor = options.tintColor.value
         pipeline.replace = options.replace
         
         return pipeline
