@@ -28,7 +28,7 @@ extension Badgy {
             or
         Provide a named color: 'snow' | 'snow1' | ...
         Complete list of named colors: https://imagemagick.org/script/color.php#color_names
-        (default: randomly selected from \(Factory.colors.joined(separator: " | "))
+        (default: randomly selected from \(Factory.colors.joined(separator: " | ")))
         """)
         var color: ColorCode?
         
