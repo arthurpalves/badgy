@@ -14,7 +14,7 @@ extension Factory {
                     tintColorHexCode: String? = nil,
                     inFolder folder: Path) throws -> String {
         
-        let color = colorHexCode ?? colors.randomElement()!
+        let color = colorHexCode ?? Factory.colors.randomElement()!
         let tintColor = tintColorHexCode ?? "white"
         
         do {

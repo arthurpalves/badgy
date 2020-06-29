@@ -22,3 +22,14 @@ extension ColorCode: ExpressibleByArgument {
     }
 }
 
+extension ColorCode: CustomStringConvertible {
+    var description: String {
+        return value
+    }
+}
+
+extension ColorCode: ExpressibleByStringLiteral {
+    init(stringLiteral value: StringLiteralType) {
+        self.init(argument: value)!
+    }
+}

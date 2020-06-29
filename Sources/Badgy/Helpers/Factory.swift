@@ -11,7 +11,7 @@ import PathKit
 typealias BadgeProductionResponse = ((Result<String, Error>) throws -> Void)
 
 struct Factory {
-    let colors = ["#EE6D6D", "#A36DEE", "#4C967E", "#3B8A4B", "#CABA0E", "#E68C31", "#E11818"]
+    static let colors = ["#EE6D6D", "#A36DEE", "#4C967E", "#3B8A4B", "#CABA0E", "#E68C31", "#E11818"]
     
     func makeBadge(with label: String,
                    colorHexCode: String? = nil,
@@ -20,7 +20,7 @@ struct Factory {
                    inFolder folder: Path) throws -> String {
         
         do {
-            let color = colorHexCode ?? colors.randomElement()!
+            let color = colorHexCode ?? Factory.colors.randomElement()!
             let tintColor = tintColorHexCode ?? "white"
             
             let folderBase = folder.absolute().description
