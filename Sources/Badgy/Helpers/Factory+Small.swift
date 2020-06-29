@@ -5,7 +5,6 @@
 //
 
 import Foundation
-import SwiftCLI
 import PathKit
 
 extension Factory {
@@ -20,10 +19,10 @@ extension Factory {
         do {
             let folderBase = folder.absolute().description
             if !folder.isDirectory {
-                try Task.run("mkdir", folderBase)
+                try Bash("mkdir", folderBase).run()
             }
             
-            try Task.run(
+            try Bash(
                 "convert", "-size", "260x",
                 "-background", color,
                 "-gravity", "Center",
@@ -32,9 +31,9 @@ extension Factory {
                 "-fill", color,
                 "caption:'-'",
                 "\(folderBase)/top.png"
-            )
+            ).run()
             
-            try Task.run(
+            try Bash(
                 "convert", "-size", "260x",
                 "-background", color,
                 "-gravity", "Center",
@@ -43,12 +42,12 @@ extension Factory {
                 "-fill", "\(tintColor)",
                 "caption:\(label)",
                 "\(folderBase)/bottom.png"
-            )
+            ).run()
             
-            try Task.run(
+            try Bash(
                 "convert", "\(folderBase)/top.png", "\(folderBase)/bottom.png",
                 "-append", "\(folderBase)/badge.png"
-            )
+            ).run()
             
             return "\(folderBase)/badge.png"
         } catch {

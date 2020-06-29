@@ -4,7 +4,6 @@
 //  Created by Arthur Alves on 30/05/2020.
 //
 
-import SwiftCLI
 import AppKit
 import PathKit
 
@@ -25,22 +24,24 @@ struct Factory {
             
             let folderBase = folder.absolute().description
             if !folder.isDirectory {
-                try Task.run("mkdir", folderBase)
+                try Bash("mkdir", folderBase).run()
             }
             
-            try Task.run(
-                "convert", "-size", "1520x",
+            try Bash(
+                "convert",
+                "-size", "1520x",
                 "-background", color,
                 "-gravity", "Center",
-                "-weight","700",
+                "-weight", "700",
                 "-pointsize", "50",
                 "-fill", color,
                 "caption:'-'",
                 "\(folderBase)/top.png"
-            )
+            ).run()
             
-            try Task.run(
-                "convert", "-size", "1520x",
+            try Bash(
+                "convert",
+                "-size", "1520x",
                 "-background", color,
                 "-gravity", "Center",
                 "-weight","700",
@@ -48,20 +49,18 @@ struct Factory {
                 "-fill", "\(tintColor)",
                 "caption:\(label)",
                 "\(folderBase)/bottom.png"
-            )
+            ).run()
             
-            try Task.run(
-                "convert", "\(folderBase)/top.png", "\(folderBase)/bottom.png",
-                "-append", "\(folderBase)/badge.png"
-            )
+            try Bash("convert", "\(folderBase)/top.png", "\(folderBase)/bottom.png",
+                     "-append", "\(folderBase)/badge.png"
+            ).run()
             
             if let angle = angle {
-                try Task.run(
-                    "convert", "\(folderBase)/badge.png",
-                    "-background", "transparent",
-                    "-rotate", "\(angle)",
-                    "\(folderBase)/badge.png"
-                )
+                try Bash("convert", "\(folderBase)/badge.png",
+                         "-background", "transparent",
+                         "-rotate", "\(angle)",
+                         "\(folderBase)/badge.png"
+                ).run()
             }
             
             return "\(folderBase)/badge.png"
@@ -80,18 +79,16 @@ struct Factory {
         let folderBase = folder.absolute().description
         let finalFilename = "\(folderBase)/\(label).png"
         
-        try Task.run(
-            "convert", baseIcon,
-            "-resize", "1024x",
-            finalFilename
-        )
+        try Bash("convert", baseIcon,
+                 "-resize", "1024x",
+                 finalFilename
+        ).run()
         
-        try Task.run(
-            "convert", "-composite",
-            "-gravity", "\(position.cardinal)",
-            finalFilename, "\(folderBase)/badge.png",
-            finalFilename
-        )
+        try Bash("convert", "-composite",
+                 "-gravity", "\(position.cardinal)",
+                 finalFilename, "\(folderBase)/badge.png",
+                 finalFilename
+        ).run()
         
         return finalFilename
     }
@@ -100,12 +97,12 @@ struct Factory {
         do {
             let folderBase = folder.absolute().description
             
-            try Task.run("rm", "-rf",
-                         "\(folderBase)/top.png",
-                         "\(folderBase)/bottom.png",
-                         "\(folderBase)/badge.png")
+            try Bash("rm", "-rf",
+                     "\(folderBase)/top.png",
+                     "\(folderBase)/bottom.png",
+                     "\(folderBase)/badge.png").run()
         } catch {
-            throw CLI.Error(message: "Failed to clean up temporary files")
+            throw RuntimeError("Failed to clean up temporary files")
         }
     }
 }
