@@ -5,7 +5,6 @@
 //
 
 import Foundation
-import SwiftCLI
 import PathKit
 
 struct ImageSize: Codable {
@@ -25,11 +24,11 @@ extension Factory {
             let size = "\($0)x\($0)"
             Logger.shared.logInfo("Resizing to: ", item: size, color: .purple)
             do {
-                try Task.run(
+                try Bash(
                     "convert", filename.absolute().description,
                     "-resize", size,
                     "\(bareFilename)_\($0).png"
-                )
+                ).run()
             } catch {
                 Logger.shared.logError("❌ ", item: "Failed to resize icon to \(size)", color: .red)
             }
@@ -41,11 +40,11 @@ extension Factory {
             .forEach { (info) in
                 Logger.shared.logInfo("Replacing: ", item: info.image, color: .purple)
                 do {
-                    try Task.run(
+                    try Bash(
                         "convert", newBadgeFile.absolute().description,
                         "-resize", info.size.description(),
                         info.image.absolute().description
-                    )
+                    ).run()
                 } catch {
                     Logger.shared.logError("❌ ",
                                            item: "Failed to replace \(info.image)")
@@ -58,11 +57,11 @@ extension Factory {
             .forEach { (info) in
                 Logger.shared.logInfo("Replacing: ", item: info.image, color: .purple)
                 do {
-                    try Task.run(
+                    try Bash(
                         "convert", newBadgeFile.absolute().description,
                         "-resize", info.size.description(),
                         info.image.absolute().description
-                    )
+                    ).run()
                 } catch {
                     Logger.shared.logError("❌ ",
                                            item: "Failed to replace \(info.image)")

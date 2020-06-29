@@ -4,7 +4,6 @@
 //  Created by Arthur Alves on 05/05/2020.
 //
 
-import SwiftCLI
 import Foundation
 
 public enum ShellColor: String {
@@ -58,7 +57,7 @@ extension VerboseLogger {
             "\(color.rawValue)\(item)\(ShellColor.neutral.rawValue)"
         ]
         arguments.forEach { command.append($0) }
-        try? Task.run("printf", command+"\n")
+        _ = try? Bash("printf", command+"\n").run()
     }
     
     public func logBack(_ prefix: Any = "", item: Any, indentationLevel: Int = 0) -> String {

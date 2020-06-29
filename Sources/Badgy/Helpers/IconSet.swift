@@ -4,7 +4,6 @@
 
 import Foundation
 import PathKit
-import SwiftCLI
 
 struct IconSet {
     typealias ImageInfo = (image: Path, size: ImageSize)
@@ -47,15 +46,14 @@ private extension ImageSize {
         }
         
         do {
-            let result = try Task.capture(
-                "identify", arguments: [
-                    "-format", "{\"width\":%[fx:w],\"height\":%[fx:h]}",
-                    imagePath.absolute().description
-                ]
-            )
+            let result = try Bash(
+                "identify",
+                "-format", "{\"width\":%[fx:w],\"height\":%[fx:h]}",
+                imagePath.absolute().description
+            ).run()
         
-            guard let data = result.stdout.data(using: .utf8) else {
-                throw CLI.Error(message: "Failed to get image size")
+            guard let data = result?.data(using: .utf8) else {
+                throw RuntimeError("Failed to get image size")
             }
             
             return try JSONDecoder().decode(ImageSize.self, from: data)

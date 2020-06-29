@@ -10,10 +10,6 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/jakeheis/SwiftCLI",
-            from: "6.0.0"
-        ),
-        .package(
             url: "https://github.com/kylef/PathKit",
             from: "1.0.0"
         ),
@@ -28,7 +24,6 @@ let package = Package(
         .target(
             name: "Badgy",
             dependencies: [
-                "SwiftCLI",
                 "PathKit",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]),

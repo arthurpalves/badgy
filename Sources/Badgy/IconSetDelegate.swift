@@ -6,7 +6,6 @@
 
 import Foundation
 import PathKit
-import SwiftCLI
 
 typealias ImageInfo = (image: Path, size: ImageSize)
 typealias IconSetImages = (largest: ImageInfo, remaining: [ImageInfo])
@@ -60,9 +59,9 @@ extension IconSetDelegate {
     
     private func imageSize(from imagePath: Path) -> ImageSize? {
         do {
-            let result = try Task.capture("identify", arguments: ["-format", "{\"width\":%[fx:w],\"height\":%[fx:h]}", imagePath.absolute().description])
-        
-            guard let data = result.stdout.data(using: .utf8) else { return nil }
+            let result = try Bash("identify", "-format", "{\"width\":%[fx:w],\"height\":%[fx:h]}", imagePath.absolute().description).run()
+
+            guard let data = result?.data(using: .utf8) else { return nil }
             let jsonDecoder = JSONDecoder()
             let imageSize: ImageSize = try jsonDecoder.decode(ImageSize.self, from: data)
             return imageSize
