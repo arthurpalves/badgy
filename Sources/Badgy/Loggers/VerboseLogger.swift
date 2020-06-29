@@ -7,8 +7,6 @@
 import SwiftCLI
 import Foundation
 
-let VerboseFlag = Flag("-v", "--verbose", description: "Log tech details for nerds")
-
 public enum ShellColor: String {
     case blue = "\\033[0;34m"
     case red = "\\033[0;31m"
