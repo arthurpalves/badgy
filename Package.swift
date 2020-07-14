@@ -20,6 +20,10 @@ let package = Package(
         .package(
             url: "https://github.com/apple/swift-argument-parser",
             from: "0.1.0"
+	),
+	.package(
+            url: "https://github.com/nicklockwood/SwiftFormat",
+            from: "0.44.17"
         )
     ],
     targets: [
