@@ -28,7 +28,7 @@ jobs:
         git config user.name "Arthur Alves"
         git config user.email "arthuralves.p@gmail.com"
         git add .
-        git commit -m "formatting: SwiftFormat adjustments"
+        if ["$(git commit -m 'formatting: automatic SwiftFormat adjustments' 2> /dev/null)"]; then echo "committed successfully"; else echo "nothing to commit"; fi
         git branch -m "clean/$(git rev-parse --abbrev-ref HEAD)"
         git push -u origin HEAD -f
         
