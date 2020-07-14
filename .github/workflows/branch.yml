@@ -21,11 +21,12 @@ jobs:
         
     - name: swiftformat
       run: |
-        swift package update
         swift run -c release swiftformat Sources/ --config scripts/swiftformat.yml
 
     - name: commit formatting
       run: |
+        git config user.name "Arthur Alves"
+        git config user.email "arthuralves.p@gmail.com"
         git add .
         git commit -m "formatting: SwiftFormat adjustments"
         git branch -m "clean/$(git rev-parse --abbrev-ref HEAD)"
