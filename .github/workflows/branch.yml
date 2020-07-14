@@ -1,0 +1,33 @@
+name: branch
+
+on:
+  push:
+    branches-ignore:
+      - 'master'
+      - 'clean/*'
+env:
+  DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
+  GITHUB_TOKEN: ${{ secrets.PAT }}
+  
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Swift Package Resolve
+      run: swift package resolve
+        
+    - name: swiftformat
+      run: |
+        swift run -c release swiftformat Sources/ --config scripts/swiftformat.yml
+
+    - name: commit formatting
+      run: |
+        git config user.name "Arthur Alves"
+        git config user.email "arthuralves.p@gmail.com"
+        git add .
+        git commit -m "formatting: SwiftFormat adjustments"
+        git branch -m "clean/$(git rev-parse --abbrev-ref HEAD)"
+        git push -u origin HEAD -f

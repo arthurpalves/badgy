@@ -16,6 +16,10 @@ let package = Package(
         .package(
             url: "https://github.com/kylef/PathKit",
             from: "1.0.0"
+        ),
+        .package(
+            url: "https://github.com/nicklockwood/SwiftFormat",
+            from: "0.44.17"
         )
     ],
     targets: [
