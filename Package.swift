@@ -20,6 +20,10 @@ let package = Package(
         .package(
             url: "https://github.com/nicklockwood/SwiftFormat",
             from: "0.44.17"
+        ),
+        .package(
+            url: "https://github.com/arthurpalves/coherent-swift",
+            from: "0.5.2"
         )
     ],
     targets: [
