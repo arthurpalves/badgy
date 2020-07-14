@@ -34,4 +34,4 @@ jobs:
         
     - name: coherent-swift
       run: |
-        swift run -c coherent-swift report -s scripts/coherent-swift.yml -d
+        swift run -c release coherent-swift report -s scripts/coherent-swift.yml -d
