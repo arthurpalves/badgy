@@ -30,10 +30,9 @@ import SwiftCLI
 
 extension Factory {
     func makeSmall(with label: String,
-                    colorHexCode: String? = nil,
-                    tintColorHexCode: String? = nil,
-                    inFolder folder: Path) throws -> String {
-        
+                   colorHexCode: String? = nil,
+                   tintColorHexCode: String? = nil,
+                   inFolder folder: Path) throws -> String {
         let color = colorHexCode ?? Factory.colors.randomElement()!
         let tintColor = tintColorHexCode ?? "white"
 
@@ -69,7 +68,7 @@ extension Factory {
                 "convert", "\(folderBase)/top.png", "\(folderBase)/bottom.png",
                 "-append", "\(folderBase)/badge.png"
             )
-            
+
             return "\(folderBase)/badge.png"
         } catch {
             print("FAILED: \(error.localizedDescription)")

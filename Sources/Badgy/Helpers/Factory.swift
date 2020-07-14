@@ -37,11 +37,11 @@ struct Factory {
                    colorHexCode: String? = nil,
                    tintColorHexCode: String? = nil,
                    angle: Int? = nil,
-                   inFolder folder: Path) throws -> String {        
+                   inFolder folder: Path) throws -> String {
         do {
             let color = colorHexCode ?? Factory.colors.randomElement()!
             let tintColor = tintColorHexCode ?? "white"
-            
+
             let folderBase = folder.absolute().description
             if !folder.isDirectory {
                 try Task.run("mkdir", folderBase)
@@ -82,36 +82,36 @@ struct Factory {
                     "\(folderBase)/badge.png"
                 )
             }
-            
+
             return "\(folderBase)/badge.png"
         } catch {
             print("FAILED: \(error.localizedDescription)")
             throw error
         }
     }
-    
+
     func appendBadge(to baseIcon: String,
                      folder: Path,
                      label: String,
                      position: Position?) throws -> String {
         let position = position ?? .bottom
-        
+
         let folderBase = folder.absolute().description
         let finalFilename = "\(folderBase)/\(label).png"
-        
+
         try Task.run(
             "convert", baseIcon,
             "-resize", "1024x",
             finalFilename
         )
-        
+
         try Task.run(
             "convert", "-composite",
             "-gravity", "\(position.cardinal)",
             finalFilename, "\(folderBase)/badge.png",
             finalFilename
         )
-        
+
         return finalFilename
     }
 

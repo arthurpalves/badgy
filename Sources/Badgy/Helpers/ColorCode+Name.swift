@@ -1,5 +1,5 @@
 //
-// Validation+ColorName.swift
+// ColorCode+Name.swift
 // Badgy
 //
 // MIT License

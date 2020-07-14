@@ -72,10 +72,10 @@ extension Factory {
                 }
             }
     }
-    
+
     func replace(_ iconSet: IconSet, with newBadgeFile: Path) {
         iconSet.images
-            .forEach { (info) in
+            .forEach { info in
                 Logger.shared.logInfo("Replacing: ", item: info.image, color: .purple)
                 do {
                     try Task.run(
@@ -87,6 +87,6 @@ extension Factory {
                     Logger.shared.logError("❌ ",
                                            item: "Failed to replace \(info.image)")
                 }
-        }
+            }
     }
 }
