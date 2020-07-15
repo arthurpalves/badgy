@@ -1,5 +1,5 @@
 //
-// Validation+ColorName.swift
+// ColorCode+Name.swift
 // Badgy
 //
 // MIT License
@@ -25,12 +25,11 @@
 // SOFTWARE.
 
 import Foundation
-import SwiftCLI
 
-extension Validation where T == String {
-    /// Check whether the `input` is a known color name
-    static func isColorName(_ input: String) -> Bool {
-        return colorNames.contains(input)
+extension ColorCode {
+    /// Checks whether `name` is a known color name
+    static func isColorName(_ name: String) -> Bool {
+        colorNames.contains(name)
     }
 
     /// The set below provides a list of named colors recognized by

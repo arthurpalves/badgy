@@ -31,18 +31,17 @@ import SwiftCLI
 typealias BadgeProductionResponse = ((Result<String, Error>) throws -> Void)
 
 struct Factory {
-    let colors = ["#EE6D6D", "#A36DEE", "#4C967E", "#3B8A4B", "#CABA0E", "#E68C31", "#E11818"]
+    static let colors = ["#EE6D6D", "#A36DEE", "#4C967E", "#3B8A4B", "#CABA0E", "#E68C31", "#E11818"]
 
     func makeBadge(with label: String,
                    colorHexCode: String? = nil,
                    tintColorHexCode: String? = nil,
                    angle: Int? = nil,
-                   inFolder folder: Path,
-                   completion: @escaping BadgeProductionResponse) throws {
-        let color = colorHexCode ?? colors.randomElement()!
-        let tintColor = tintColorHexCode ?? "white"
-
+                   inFolder folder: Path) throws -> String {
         do {
+            let color = colorHexCode ?? Factory.colors.randomElement()!
+            let tintColor = tintColorHexCode ?? "white"
+
             let folderBase = folder.absolute().description
             if !folder.isDirectory {
                 try Task.run("mkdir", folderBase)
@@ -83,39 +82,37 @@ struct Factory {
                     "\(folderBase)/badge.png"
                 )
             }
-            try completion(.success("\(folderBase)/badge.png"))
 
+            return "\(folderBase)/badge.png"
         } catch {
             print("FAILED: \(error.localizedDescription)")
-            try? completion(.failure(error))
+            throw error
         }
     }
 
-    func appendBadge(to baseIcon: String, folder: Path, label: String,
-                     position: Position?, completion: @escaping BadgeProductionResponse) throws {
+    func appendBadge(to baseIcon: String,
+                     folder: Path,
+                     label: String,
+                     position: Position?) throws -> String {
         let position = position ?? .bottom
 
-        do {
-            let folderBase = folder.absolute().description
-            let finalFilename = "\(folderBase)/\(label).png"
+        let folderBase = folder.absolute().description
+        let finalFilename = "\(folderBase)/\(label).png"
 
-            try Task.run(
-                "convert", baseIcon,
-                "-resize", "1024x",
-                finalFilename
-            )
+        try Task.run(
+            "convert", baseIcon,
+            "-resize", "1024x",
+            finalFilename
+        )
 
-            try Task.run(
-                "convert", "-composite",
-                "-gravity", "\(position.cardinal)",
-                finalFilename, "\(folderBase)/badge.png",
-                finalFilename
-            )
+        try Task.run(
+            "convert", "-composite",
+            "-gravity", "\(position.cardinal)",
+            finalFilename, "\(folderBase)/badge.png",
+            finalFilename
+        )
 
-            try completion(.success(finalFilename))
-        } catch {
-            try? completion(.failure(error))
-        }
+        return finalFilename
     }
 
     func cleanUp(folder: Path) throws {

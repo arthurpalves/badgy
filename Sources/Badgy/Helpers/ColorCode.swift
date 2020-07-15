@@ -1,5 +1,5 @@
 //
-// Validation+Any.swift
+// ColorCode.swift
 // Badgy
 //
 // MIT License
@@ -24,17 +24,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import ArgumentParser
 import Foundation
-import SwiftCLI
 
-extension Validation {
-    static func any<T>(_ message: String, validations: Validation<T>.ValidatorBlock...) -> Validation<T> {
-        return Validation<T>.custom(message) { input in
-            let isInputValid = validations.contains { validation in validation(input) }
-            if !isInputValid {
-                Logger.shared.logError("❌ ", item: message)
-            }
-            return isInputValid
+struct ColorCode {
+    var value: String
+}
+
+extension ColorCode: ExpressibleByArgument {
+    init?(argument: String) {
+        switch argument {
+        case let hex where ColorCode.isHexColor(argument):
+            value = hex
+        case let name where ColorCode.isColorName(argument):
+            value = name
+        default:
+            return nil
         }
+    }
+}
+
+extension ColorCode: CustomStringConvertible {
+    var description: String {
+        return value
+    }
+}
+
+extension ColorCode: ExpressibleByStringLiteral {
+    init(stringLiteral value: StringLiteralType) {
+        self.init(argument: value)!
     }
 }

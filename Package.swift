@@ -18,6 +18,10 @@ let package = Package(
             from: "1.0.0"
         ),
         .package(
+            url: "https://github.com/apple/swift-argument-parser",
+            from: "0.1.0"
+	),
+	.package(
             url: "https://github.com/nicklockwood/SwiftFormat",
             from: "0.44.17"
         )
@@ -27,7 +31,11 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "Badgy",
-            dependencies: ["SwiftCLI", "PathKit"]),
+            dependencies: [
+                "SwiftCLI",
+                "PathKit",
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ]),
         .testTarget(
             name: "BadgyTests",
             dependencies: ["Badgy"]),

@@ -26,7 +26,7 @@
 
 import Foundation
 
-enum Position: String {
+enum Position: String, CaseIterable {
     case top, left, bottom, right
     case topLeft, topRight
     case bottomLeft, bottomRight
@@ -53,5 +53,11 @@ enum Position: String {
         case .center:
             return "Center"
         }
+    }
+}
+
+extension Sequence where Element == Position {
+    func formatted() -> String {
+        map { $0.rawValue }.joined(separator: " | ")
     }
 }

@@ -1,5 +1,5 @@
 //
-// Validation+Color.swift
+// Icon.swift
 // Badgy
 //
 // MIT License
@@ -24,19 +24,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import ArgumentParser
 import Foundation
-import SwiftCLI
+import PathKit
 
-extension Validation where T == String {
-    static func colorCode() -> Self {
-        let message = """
+enum Icon {
+    case plain(Path)
+    case set(IconSet)
 
-            Specify a valid hex color code in a case insensitive format: '#rrbbgg' | '#rrbbggaa'
-                or
-            Provide a named color: 'snow' | 'snow1' | ...
-            Complete list of named colors: https://imagemagick.org/script/color.php#color_names
-        """
+    init(path: String) throws {
+        let path = Path(path)
 
-        return Validation.any(message, validations: isHexColor, isColorName)
+        guard path.exists else {
+            let message = "Input file or directory doesn't exist"
+            Logger.shared.logError("❌ ", item: message)
+            throw ValidationError(message)
+        }
+
+        if let set = IconSet.makeFromFolder(at: path) {
+            self = .set(set)
+            return
+        }
+
+        if IconSet.imageExtensions.contains(path.extension ?? "") {
+            self = .plain(path)
+            return
+        }
+
+        let message = "Input file or directory doesn't have a valid format"
+        Logger.shared.logError("❌ ", item: message)
+        throw ValidationError(message)
+    }
+}
+
+extension Icon {
+    var path: Path {
+        switch self {
+        case let .plain(path): return path
+        case let .set(set): return set.path
+        }
     }
 }

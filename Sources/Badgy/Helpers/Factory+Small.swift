@@ -32,9 +32,8 @@ extension Factory {
     func makeSmall(with label: String,
                    colorHexCode: String? = nil,
                    tintColorHexCode: String? = nil,
-                   inFolder folder: Path,
-                   completion: @escaping BadgeProductionResponse) {
-        let color = colorHexCode ?? colors.randomElement()!
+                   inFolder folder: Path) throws -> String {
+        let color = colorHexCode ?? Factory.colors.randomElement()!
         let tintColor = tintColorHexCode ?? "white"
 
         do {
@@ -69,11 +68,11 @@ extension Factory {
                 "convert", "\(folderBase)/top.png", "\(folderBase)/bottom.png",
                 "-append", "\(folderBase)/badge.png"
             )
-            try completion(.success("\(folderBase)/badge.png"))
 
+            return "\(folderBase)/badge.png"
         } catch {
             print("FAILED: \(error.localizedDescription)")
-            try? completion(.failure(error))
+            throw error
         }
     }
 }
